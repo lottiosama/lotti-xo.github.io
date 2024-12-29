@@ -39,6 +39,7 @@
             margin: 0 auto;
             border: 5px solid #ff0059;
             box-sizing: border-box;
+            cursor: pointer;
         }
 
         .profile-name {
@@ -167,14 +168,6 @@
             cursor: pointer;
         }
 
-        /* Total Views formatting */
-        .total-views {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        /* Pop-Up */
         .popup {
             position: fixed;
             top: 0;
@@ -276,11 +269,21 @@
         </div>
     </div>
 
-    <script>
-        var followers = 0; // Initial followers count
-        var totalViews = 0; // Initial total views
+    <!-- Popup for Clear Data -->
+    <div class="popup" id="clear-popup">
+        <div class="popup-content">
+            <span class="close" id="close-clear-popup">&times;</span>
+            <h3>Clear Data</h3>
+            <p>Warning: This will reset your followers count and total views to 0!</p>
+            <button class="popup-button" id="clear-data-button">Clear</button>
+        </div>
+    </div>
 
-        // Helper function to format numbers with commas (no abbreviation for Total Views)
+    <script>
+        var followers = getCookie('followers') ? parseInt(getCookie('followers')) : 0;
+        var totalViews = getCookie('totalViews') ? parseInt(getCookie('totalViews')) : 0;
+
+        // Helper function to format numbers with commas
         function formatNumberWithCommas(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
@@ -295,6 +298,19 @@
                 return (num / 1000).toFixed(1) + 'K';
             }
             return num;
+        }
+
+        // Function to save data to cookies
+        function setCookie(name, value) {
+            document.cookie = `${name}=${value};path=/`;
+        }
+
+        // Function to get cookie by name
+        function getCookie(name) {
+            const matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : null;
         }
 
         // Function to add a new post with random views
@@ -356,6 +372,7 @@
                     totalViews += baseViews;
                     // Use formatNumberWithCommas to display the full Total Views count with commas
                     document.getElementById('total-views').textContent = formatNumberWithCommas(totalViews);
+                    setCookie('totalViews', totalViews);
                 }
             }, 300); // Update every 300ms
         }
@@ -381,11 +398,37 @@
             const amount = document.getElementById('followers-input').value;
             followers += parseInt(amount);
             document.getElementById('followers-count').textContent = formatNumber(followers);
+            setCookie('followers', followers);
             document.getElementById('popup').style.display = 'none';
         });
 
         // Handle add post button click
         document.querySelector('.add-post-button').addEventListener('click', addPost);
+
+        // Handle profile pic click to open clear data popup
+        document.querySelector('.profile-pic').addEventListener('click', function () {
+            document.getElementById('clear-popup').style.display = 'flex';
+        });
+
+        // Handle clear data button click
+        document.getElementById('clear-data-button').addEventListener('click', function () {
+            followers = 0;
+            totalViews = 0;
+            document.getElementById('followers-count').textContent = formatNumber(followers);
+            document.getElementById('total-views').textContent = formatNumberWithCommas(totalViews);
+            setCookie('followers', 0);
+            setCookie('totalViews', 0);
+            document.getElementById('clear-popup').style.display = 'none';
+        });
+
+        // Handle close clear data popup
+        document.getElementById('close-clear-popup').addEventListener('click', () => {
+            document.getElementById('clear-popup').style.display = 'none';
+        });
+
+        // Initialize display values
+        document.getElementById('followers-count').textContent = formatNumber(followers);
+        document.getElementById('total-views').textContent = formatNumberWithCommas(totalViews);
 
     </script>
 </body>
