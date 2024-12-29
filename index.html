@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Profile Replica</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #F9F9F9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .profile-container {
+            background-color: white;
+            width: 400px;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-image: url('pfp.png');
+            background-size: cover;
+            background-position: center;
+            margin: 0 auto;
+            border: 5px solid #ff0059;
+            box-sizing: border-box;
+        }
+
+        .profile-name {
+            margin-top: 15px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .profile-username {
+            color: #777;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .verified-icon {
+            width: 18px;
+            height: 18px;
+            background-color: #1da1f2;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        .verified-icon i {
+            color: white;
+            font-size: 10px;
+        }
+
+        .followers-info {
+            display: flex;
+            justify-content: space-evenly;
+            margin-bottom: 25px;
+        }
+
+        .followers-info div {
+            text-align: center;
+        }
+
+        .followers-count {
+            font-size: 22px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .followers-label {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .button {
+            background-color: #ff0059;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #e60050;
+        }
+
+        .add-post-button {
+            background-color: #1da1f2;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-post-button:hover {
+            background-color: #1991d4;
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .post {
+            background-color: #f1f1f1;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-thumbnail {
+            width: 100%;
+            height: 150px;
+            background-color: #ccc;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .post-info {
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .views {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .play-button {
+            font-size: 16px;
+            color: #ff0059;
+            cursor: pointer;
+        }
+
+        /* Total Views formatting */
+        .total-views {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Pop-Up */
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+            position: relative;
+        }
+
+        .popup .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .input-field {
+            width: 90%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            margin-top: 20px;
+        }
+
+        .popup-button {
+            background-color: #ff0059;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: none;
+            outline: none;
+        }
+
+        .popup-button:hover {
+            background-color: #e60050;
+        }
+
+        /* Bold text for amount */
+        .bold-amount {
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="profile-container">
+        <div class="profile-pic"></div>
+        <div class="profile-name">Pōp$tar $uicide
+            <span class="verified-icon"><i class="fas fa-check"></i></span>
+        </div>
+        <div class="profile-username">@popstar</div>
+
+        <div class="followers-info">
+            <div>
+                <div class="followers-count" id="followers-count">0</div>
+                <div class="followers-label">Followers</div>
+            </div>
+            <div>
+                <div class="followers-count" id="total-views">0</div>
+                <div class="followers-label">Total Views</div>
+            </div>
+        </div>
+
+        <button class="button" id="follow-button">Follow</button>
+
+        <!-- Add Post button -->
+        <button class="add-post-button">+</button>
+
+        <!-- Posts Grid -->
+        <div class="posts-grid" id="posts-grid"></div>
+    </div>
+
+    <!-- Popup for Add Followers -->
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <span class="close" id="close-popup">&times;</span>
+            <h3>Add Followers</h3>
+            <input type="number" class="input-field" id="followers-input" placeholder="Number of followers">
+            <p id="add-followers-text">Add <span class="bold-amount">0</span> Followers?</p>
+            <button class="popup-button" id="add-followers-button">Add</button>
+        </div>
+    </div>
+
+    <script>
+        var followers = 0; // Initial followers count
+        var totalViews = 0; // Initial total views
+
+        // Helper function to format numbers with commas (no abbreviation for Total Views)
+        function formatNumberWithCommas(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // Helper function to format numbers with abbreviations (K, M, B) for videos and followers
+        function formatNumber(num) {
+            if (num >= 1000000000) {
+                return (num / 1000000000).toFixed(1) + 'B';
+            } else if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num;
+        }
+
+        // Function to add a new post with random views
+        function addPost() {
+            // Generate a random background color for the thumbnail
+            const hexColor = "#" + Math.floor(Math.random()*16777215).toString(16);
+
+            // Random view count between 15% to 30% of the followers count
+            let baseViews = Math.floor(followers * (Math.random() * 0.15 + 0.15));
+
+            // 1 in 25 chance for the post to go viral
+            if (Math.random() < 0.04) {
+                baseViews *= 10;
+            }
+
+            // Create the new post element
+            const post = document.createElement('div');
+            post.classList.add('post');
+            
+            // Thumbnail
+            const postThumbnail = document.createElement('div');
+            postThumbnail.classList.add('post-thumbnail');
+            postThumbnail.style.backgroundColor = hexColor;
+            post.appendChild(postThumbnail);
+
+            const postInfo = document.createElement('div');
+            postInfo.classList.add('post-info');
+
+            const viewsElement = document.createElement('span');
+            viewsElement.classList.add('views');
+            viewsElement.textContent = `${formatNumber(baseViews)} views`;
+
+            const playButton = document.createElement('span');
+            playButton.classList.add('play-button');
+            playButton.innerHTML = '<i class="fas fa-play"></i>';
+
+            postInfo.appendChild(viewsElement);
+            postInfo.appendChild(playButton);
+            post.appendChild(postInfo);
+
+            // Append the new post to the grid
+            const postsGrid = document.getElementById('posts-grid');
+            postsGrid.prepend(post);
+
+            // If there are more than 3 posts, remove the oldest one
+            if (postsGrid.children.length > 3) {
+                postsGrid.removeChild(postsGrid.lastChild);
+            }
+
+            // Simulate view count updating
+            let currentViewCount = 0;
+            let interval = setInterval(() => {
+                if (currentViewCount < baseViews) {
+                    currentViewCount += Math.floor(baseViews * 0.1);
+                    viewsElement.textContent = `${formatNumber(currentViewCount)} views`;
+                } else {
+                    clearInterval(interval);
+                    // After updating, add views to total views
+                    totalViews += baseViews;
+                    // Use formatNumberWithCommas to display the full Total Views count with commas
+                    document.getElementById('total-views').textContent = formatNumberWithCommas(totalViews);
+                }
+            }, 300); // Update every 300ms
+        }
+
+        // Handle follow button click
+        document.getElementById('follow-button').addEventListener('click', () => {
+            document.getElementById('popup').style.display = 'flex';
+        });
+
+        // Handle close popup
+        document.getElementById('close-popup').addEventListener('click', () => {
+            document.getElementById('popup').style.display = 'none';
+        });
+
+        // Handle input change
+        document.getElementById('followers-input').addEventListener('input', function () {
+            const amount = this.value;
+            document.getElementById('add-followers-text').innerHTML = `Add <span class="bold-amount">${formatNumber(amount)}</span> Followers?`;
+        });
+
+        // Handle Add button in popup
+        document.getElementById('add-followers-button').addEventListener('click', function () {
+            const amount = document.getElementById('followers-input').value;
+            followers += parseInt(amount);
+            document.getElementById('followers-count').textContent = formatNumber(followers);
+            document.getElementById('popup').style.display = 'none';
+        });
+
+        // Handle add post button click
+        document.querySelector('.add-post-button').addEventListener('click', addPost);
+
+    </script>
+</body>
+</html>
