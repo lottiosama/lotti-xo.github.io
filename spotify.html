@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Artist - Kanye West</title>
+    <style>
+        /* Import Circular Spotify Text font */
+        @font-face {
+            font-family: 'CircularSpotifyText-Book';
+            src: url('CircularSpotifyText-Book.otf') format('opentype');
+        }
+
+        /* General Styles */
+        body {
+            font-family: 'CircularSpotifyText-Book', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: white;
+        }
+
+        .content-container {
+            padding: 20px;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .profile-picture img {
+            border-radius: 50%;
+            width: 170px;
+            height: 170px;
+            border: 5px solid #ff0059; /* Added border with #ff0059 color */
+        }
+
+        .artist-details {
+            margin-left: 20px;
+        }
+
+        .artist-name {
+            font-size: 6rem;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        .monthly-listeners {
+            font-size: 1.2rem;
+            color: #b3b3b3;
+        }
+
+        .buttons-section {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .toggle-options {
+            margin-top: 10px;
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline;
+        }
+
+        /* Updated Popup Styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10; /* Make sure it's above the body content */
+        }
+
+        .popup-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            z-index: 20; /* Ensure the popup content is above the overlay */
+        }
+
+        .popup-container input {
+            margin: 10px 0;
+            padding: 8px;
+            width: 80%;
+        }
+
+        .popup-container button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup-container button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="content-container">
+        <div class="profile-section">
+            <div class="profile-picture">
+                <img aria-hidden="false" draggable="false"
+                     src="pfp.png" 
+                     alt="Kanye West">
+            </div>
+            <div class="artist-details">
+                <h1 class="artist-name">Pōp$tar $uicide</h1>
+                <p class="monthly-listeners" id="counter">0 monthly listeners</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="buttons-section">
+        <button id="toggleButton">Start</button>
+        <div class="toggle-options" id="toggleOptions">Show Options</div>
+    </div>
+
+    <div class="popup-overlay" id="popupOverlay"></div>
+
+    <div class="popup-container" id="popupContainer">
+        <h2>Options</h2>
+        <label for="minIncrease">Minimum Increase:</label>
+        <input type="number" id="minIncrease" value="10">
+        <label for="maxIncrease">Maximum Increase:</label>
+        <input type="number" id="maxIncrease" value="20">
+        <button id="saveOptions">Save</button>
+    </div>
+
+    <script>
+        var counterValue = 0;
+        var timerId;
+
+        function toggleCounter() {
+            if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+                document.getElementById("toggleButton").textContent = "Resume";
+            } else {
+                var minIncrease = parseInt(document.getElementById("minIncrease")?.value || 10);
+                var maxIncrease = parseInt(document.getElementById("maxIncrease")?.value || 20);
+                timerId = setInterval(function() {
+                    incrementCounter(minIncrease, maxIncrease);
+                }, 25);
+                document.getElementById("toggleButton").textContent = "Pause";
+            }
+        }
+
+        function incrementCounter(minIncrease, maxIncrease) {
+            var randomAmount = Math.floor(Math.random() * (maxIncrease - minIncrease + 1)) + minIncrease;
+            counterValue += randomAmount;
+            document.getElementById("counter").textContent = formatNumber(counterValue) + " monthly listeners";
+        }
+
+        function formatNumber(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function toggleOptions() {
+            var popupContainer = document.getElementById("popupContainer");
+            var popupOverlay = document.getElementById("popupOverlay");
+
+            var isVisible = popupContainer.style.display === "block";
+
+            if (isVisible) {
+                popupContainer.style.display = "none";
+                popupOverlay.style.display = "none";
+            } else {
+                popupContainer.style.display = "block";
+                popupOverlay.style.display = "block";
+            }
+        }
+
+        document.getElementById("toggleButton").addEventListener("click", toggleCounter);
+        document.getElementById("toggleOptions").addEventListener("click", toggleOptions);
+        document.getElementById("popupOverlay").addEventListener("click", toggleOptions);
+
+        // Close the popup when the Save button is clicked
+        document.getElementById("saveOptions").addEventListener("click", function() {
+            var popupContainer = document.getElementById("popupContainer");
+            var popupOverlay = document.getElementById("popupOverlay");
+
+            // Hide the popup and overlay when Save is clicked
+            popupContainer.style.display = "none";
+            popupOverlay.style.display = "none";
+        });
+    </script>
+</body>
+</html>
